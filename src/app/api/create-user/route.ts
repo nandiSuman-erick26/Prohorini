@@ -12,7 +12,7 @@ export async function POST() {
     .select("id")
     .eq("clerk_id", user.id);
 
-  console.log("Existing user:", data);
+  // console.log("Existing user:", data);
 
   if (!data || data?.length === 0) {
     await supabaseAdmin.from("users_profile").insert({

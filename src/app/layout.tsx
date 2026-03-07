@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     title: "Prohorini | Guardian for Women",
     description:
       "Advanced AI-driven safety platform providing real-time protection, threat zone monitoring, and emergency SOS intelligence for women.",
-    url: "https://prohorini.com",
+    url: "https://prohorini-safety.vercel.app",
     siteName: "Prohorini",
     images: [
       {

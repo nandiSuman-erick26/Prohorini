@@ -32,7 +32,7 @@ export default clerkMiddleware(async (auth, req) => {
     .single();
 
   const role = user_profile?.role;
-  console.log("fetching role", role);
+  // console.log("fetching role", role);
 
   if (isAuthPage) {
     const target =

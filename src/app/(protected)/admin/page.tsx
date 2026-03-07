@@ -20,7 +20,7 @@ import ProhoriniShieldLoader from "@/components/ui/loaders/ProhoriniShieldLoader
 
 const AdminPage = () => {
   const { adminProfile } = useAppSelector((state) => state.adminProfile);
-  console.log("adminProfile", adminProfile?.role);
+  // console.log("adminProfile", adminProfile?.role);
 
   const { data: stats, isLoading: isStatsLoading } = useQuery({
     queryKey: ["adminStats"],

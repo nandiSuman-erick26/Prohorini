@@ -35,7 +35,7 @@ const CompleteProfilePage = () => {
 
   const circle = circleMember;
   const percentage = calculateProfileCompletation(profile, circleMember);
-  console.log("%", percentage);
+  // console.log("%", percentage);
 
   useEffect(() => {
     if (profile) {
