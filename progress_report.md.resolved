@@ -1,0 +1,298 @@
+# 🛡️ Prohorini v0.0.1 — Feature Progress Report
+> **Date:** March 1, 2026 | **Tech Stack:** Next.js 16, Clerk, Supabase, React Leaflet, Redux, React Query, Zod, Turf.js, Supercluster
+
+---
+
+## 📊 Overall Summary
+
+| # | Module                          | Progress | Status       |
+|---|--------------------------------|----------|--------------|
+| 1 | User Onboarding & Auth         | **75%**  | 🟡 In Progress |
+| 2 | Safety Circle Management       | **70%**  | 🟡 In Progress |
+| 3 | Live Location Sharing          | **85%**  | 🟢 Mostly Done |
+| 4 | Crime Reporting System         | **80%**  | 🟢 Mostly Done |
+| 5 | Crime Density Heatmap          | **90%**  | 🟢 Mostly Done |
+| 6 | Safety Infrastructure Mgmt     | **80%**  | 🟢 Mostly Done |
+| 7 | Admin Dashboard                | **75%**  | 🟡 In Progress |
+| 8 | Notifications & Alerts         | **45%**  | 🔴 Partial    |
+
+**Estimated Overall Progress: ~75%**
+
+---
+
+## 1. User Onboarding & Authentication — 75% ✅
+
+### ✅ Completed
+| Sub-feature | Evidence |
+|---|---|
+| Registration via Clerk (email + OAuth) | [sign-in page](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/app/(public)/sign-in/[[...sign-in]]/page.tsx), [sign-up page](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/app/(public)/sign-up/[[...sign-up]]/page.tsx) |
+| User sync to Supabase on sign-in | [UserSync.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/auth/UserSync.tsx) — calls `/api/create-user` on login |
+| Role management (USER, ADMIN, SUPER_ADMIN) | [middleware.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/middleware.ts) — fetches role from `users_profile` table |
+| JWT session management via Clerk | Clerk handles sessions; middleware validates with `clerkMiddleware()` |
+| Role-based redirection post-login | Middleware redirects USER→`/dashboard`, ADMIN/SUPER_ADMIN→`/admin` |
+| Role-based API protection | Middleware blocks non-GET admin API calls for USERs |
+| Profile form with Zod validation | [ProfileForm.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/profile/ProfileForm.tsx), [zod.userProfile.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/services/validations/schemas/zod.userProfile.ts) |
+| Profile photo upload | [ProfilePhotoUploader.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/profile/ProfilePhotoUploader.tsx) |
+| Profile completion tracking | [profileCompetion.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/services/helper/profileCompetion.ts), [ProfileCompletionCard.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/user-panel/ProfileCompletionCard.tsx) |
+| Role guard hook | [useRoleGuard.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/hooks/utils/useRoleGuard.ts), [adminGuard.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/lib/adminGuard.ts) |
+
+### ❌ Not Yet Implemented
+| Sub-feature | Notes |
+|---|---|
+| Phone number registration | Clerk supports it but not configured |
+| Identity verification flow | No KYC or document verification implemented |
+| Emergency contact at registration | Contacts are added separately, not during registration |
+
+---
+
+## 2. Safety Circle Management — 70% ✅
+
+### ✅ Completed
+| Sub-feature | Evidence |
+|---|---|
+| Add emergency contacts (Create) | [EmergencyContacForm.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/profile/EmergencyContacForm.tsx) with Zod validation |
+| Edit emergency contacts (Update) | [startEdit()](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/profile/EmergencyContacForm.tsx#113-120) function in EmergencyContacForm |
+| Delete emergency contacts (Delete) | [deleteContact()](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/profile/EmergencyContacForm.tsx#88-112) function with API call |
+| View contacts list (Read) | [CircleMemberPreviewCard.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/user-panel/CircleMemberPreviewCard.tsx) |
+| Toggle "notify on danger" per contact | [toggleNotify()](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/user-panel/CircleMemberPreviewCard.tsx#55-74) in CircleMemberPreviewCard |
+| Zod validation for contact data | [zod.emergencyConntacts.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/services/validations/schemas/zod.emergencyConntacts.ts) |
+| React Query hooks for contacts | [useEmergencyContacts.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/hooks/react-query/useEmergencyContacts.ts) |
+| API endpoint for contacts | [/api/emergency-contacts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/app/api/emergency-contacts) |
+
+### ❌ Not Yet Implemented
+| Sub-feature | Notes |
+|---|---|
+| Role-based privacy control (allow/disallow location visibility) | `allowLocation` field exists in the interface but toggle logic not wired |
+| Circle members receiving real-time location | Subscription exists but not filtered to circle members only |
+| Invitation-based circle joining | Contacts are manually added, no invite/accept flow |
+
+---
+
+## 3. Live Location Sharing — 85% ✅
+
+### ✅ Completed
+| Sub-feature | Evidence |
+|---|---|
+| GPS position tracking via `watchPosition` | [useLocationSharing.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/hooks/utils/useLocationSharing.ts) |
+| Location upsert to Supabase `live_locations` | Same hook — upserts lat/lng/accuracy with interval |
+| Real-time map with React Leaflet | [LiveMap.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/user-panel/LiveMap.tsx) — 670 lines |
+| Supabase Realtime subscription for circle | [useLiveLocationSubscription.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/hooks/utils/useLiveLocationSubscription.ts) — `postgres_changes` |
+| Live markers on map for circle members | [LiveMarkersLayer.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/user-panel/LiveMarkersLayer.tsx) |
+| Toggle start/stop sharing | [SafetyActionBar.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/user-panel/SafetyActionBar.tsx) — sharing toggle button |
+| SOS trigger button | SafetyActionBar — SOS button with pulse animation |
+| Time-limited session (1 hour expiry) | [startSharingSession](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/hooks/redux/redux-slices/userSafetySlice.ts#76-84) sets `expiresAt` to +1 hour |
+| Location history/trail (50 points) | [userSafetySlice.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/hooks/redux/redux-slices/userSafetySlice.ts) — `locationHistory` array |
+| Adaptive update interval (4s SOS / 10s normal) | [useLocationSharing](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/hooks/utils/useLocationSharing.ts#7-134) — checks `safetyStatus === "sos"` |
+| Final "OFF" update when sharing stops | [sendFinalUpdate()](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/hooks/utils/useLocationSharing.ts#112-130) in useLocationSharing |
+| User self-marker on map | `currentCoords` from Redux shown as marker in LiveMap |
+| Redux state management for safety | Full `userSafetySlice` with sharing, SOS, geofencing states |
+
+### ❌ Not Yet Implemented
+| Sub-feature | Notes |
+|---|---|
+| Auto-expiry enforcement (timer to stop sharing) | `expiresAt` is stored but no timer auto-stops sharing |
+| Map marker smooth movement/animation | Marker updates positions but no smooth interpolation |
+| Location log persistence to DB | History only in Redux (client-side), not persisted |
+
+---
+
+## 4. Crime Reporting System — 80% ✅
+
+### ✅ Completed
+| Sub-feature | Evidence |
+|---|---|
+| Crime report modal with form | [CrimeReportModal.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/user-panel/CrimeReportModal.tsx) — 355 lines |
+| Crime types (harassment, theft, stalking, assault, etc.) | Type selection in modal with multiple categories |
+| Location capture (GPS button) | [handleGetLocation()](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/user-panel/CrimeReportModal.tsx#76-94) using `navigator.geolocation` |
+| Photo upload with preview | File input with base64 preview |
+| Description field | Textarea in the form |
+| Zod validation | [zod.crimeReport.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/services/validations/schemas/zod.crimeReport.ts) |
+| API for report submission | [crimeReportSubmit.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/lib/api/crimeReportSubmit.ts), React Query hook: [useSubmitCrimeReport.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/hooks/react-query/useSubmitCrimeReport.ts) |
+| Reports stored with moderation status | `status: pending/approved/rejected` in Supabase |
+| Admin approval/rejection flow | [CrimeAprovalCard.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/admin-panel/dashboard-layout/CrimeAprovalCard.tsx), [useUpdateCrimeStatus.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/hooks/react-query/useUpdateCrimeStatus.ts) |
+| User reports query hook | [useUserReports.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/hooks/react-query/useUserReports.ts) |
+
+### ❌ Not Yet Implemented
+| Sub-feature | Notes |
+|---|---|
+| Optional anonymity toggle | No anonymous reporting option in the form |
+| Spam prevention / rate-limiting | No throttle or cooldown on report submissions |
+| Time field in form | Only `created_at` is auto-set, no manual time selection |
+
+---
+
+## 5. Crime Density Heatmap — 90% ✅
+
+### ✅ Completed
+| Sub-feature | Evidence |
+|---|---|
+| Dynamic heatmap overlay with Leaflet | [ThreatHeatMapLayer.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/ThreatHeatMapLayer.tsx) — uses `leaflet.heat` |
+| Crime cluster analysis with Supercluster | [CrimeClusterLayer.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/user-panel/CrimeClusterLayer.tsx) — Supercluster with severity-based colors |
+| Crime grid density layer | [CrimeGridLayer.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/user-panel/CrimeGridLayer.tsx) — 500m grid cells |
+| Density calculation utility | [heatMapDensity.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/utils/heatMapDensity.ts) |
+| Filters by crime type | [MapFilters.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/user-panel/MapFilters.tsx) — category filter dropdown |
+| Filters by date (year) | MapFilters — year filter dropdown |
+| Filters by severity | MapFilters — severity threshold filter |
+| Radius-based filtering (Near Me) | MapFilters — radius in km filter |
+| Region-based intensity colors | `getSeverityColor()` utility, gradient in heatmap |
+| Approved reports as data source | [useApprovedReports.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/hooks/react-query/useApprovedReports.ts) |
+| Responsive map rendering | LiveMap adapts to screen size |
+| Buffer/radius calculations with Turf.js | [proximity.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/utils/proximity.ts) — `turf.distance`, `turf.nearestPoint` |
+| Map bounds listener for dynamic loading | [MapBoundsListener](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/user-panel/LiveMap.tsx#99-128) component in LiveMap |
+
+### ❌ Not Yet Implemented
+| Sub-feature | Notes |
+|---|---|
+| Date range filter (beyond just year) | Only yearly filter implemented, no month/custom range |
+
+---
+
+## 6. Safety Infrastructure Management — 80% ✅
+
+### ✅ Completed
+| Sub-feature | Evidence |
+|---|---|
+| Add police stations, hospitals, help centers | [InfrastructureMap.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/super-admin/Infrastructure/InfrastructureMap.tsx) with `infraMode === "add"` |
+| Edit infrastructure (editable markers) | [EditableMarker.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/services/helper/EditableMarker.tsx) |
+| View/filter infrastructure | `infraFilterType` from Redux state |
+| Infrastructure panel for management | [InfrastucturePanel.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/super-admin/Infrastructure/InfrastucturePanel.tsx) |
+| Draw polygon zones on map | [ThreatZoneMapDraw.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/super-admin/threatZone/ThreatZoneMapDraw.tsx) — react-leaflet-draw |
+| Zone CRUD (create, edit, delete) | [ZoneCreateModal.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/super-admin/threatZone/ZoneCreateModal.tsx), [ZoneEditPanel.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/super-admin/threatZone/ZoneEditPanel.tsx), [ZoneManagemantPanel.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/super-admin/threatZone/ZoneManagemantPanel.tsx) |
+| GeoJSON storage for spatial zones | Zones stored with `geojson` field, rendered via `<GeoJSON>` |
+| Safe zones & exit routes | [SafetyInfrastructureLayer.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/user-panel/SafetyInfrastructureLayer.tsx) — distinct styling for `safe_zone` and `exit_route` |
+| Nearest safety point search | [NearestSafetyHUD.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/user-panel/NearestSafetyHUD.tsx) — Turf.js `nearestPoint` |
+| Zone detection engine | [zoneDetectionEngine.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/utils/zoneDetectionEngine.ts) — ENTER/INSIDE/EXIT detection |
+| API routes for zones & infra | [/api/admin/threat-zones](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/app/api/admin/threat-zones), [/api/admin/safety-infra](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/app/api/admin/safety-infra) |
+| POI calculations with Turf.js | [proximity.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/utils/proximity.ts) and [calculateDistance.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/utils/calculateDistance.ts) |
+
+### ❌ Not Yet Implemented
+| Sub-feature | Notes |
+|---|---|
+| Emergency exit route drawing tool | Routes aren't drawn on map; only polygons via react-leaflet-draw |
+| Severity-based polygon styling in admin | Zones show severity color on user map but admin editor doesn't preview it |
+
+---
+
+## 7. Admin Dashboard — 75% ✅
+
+### ✅ Completed
+| Sub-feature | Evidence |
+|---|---|
+| Dashboard with stat cards | [AdminPage (page.tsx)](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/app/(protected)/admin/page.tsx) — Total Users, SOS (24h), Threat Zones, Pending Reports |
+| Stat card component | [Statcard.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/admin-panel/dashboard-layout/Statcard.tsx) |
+| Crime reports table with filtering | [Reports page](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/app/(protected)/admin/reports/page.tsx) — 415 lines with sorting, filtering by status/type |
+| Approve/reject reports | CrimeAprovalCard with approve/reject buttons |
+| User management table | [Users page](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/app/(protected)/admin/users/page.tsx) — verify/ban users |
+| SOS monitoring page | [SOS page](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/app/(protected)/admin/sos/page.tsx) — live SOS map + user list |
+| Safety incident logs | [Logs page](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/app/(protected)/admin/logs/page.tsx) — table with time, user, event, zone |
+| Threat zones management page | [Zones page](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/app/(protected)/admin/zones/page.tsx) |
+| Infrastructure management page | [Infra page](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/app/(protected)/admin/infra/page.tsx) |
+| Admin layout with sidebar & topbar | [AdminTopbar.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/components/admin-panel/layout/AdminTopbar.tsx), admin [layout.tsx](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/app/layout.tsx) |
+| Quick action links from dashboard | Quick actions to SOS, Reports, Users, Zones |
+| Dashboard stats API | [/api/admin/dashboard-stats](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/app/api/admin/dashboard-stats) |
+| Auto-refresh (30s interval) | `refetchInterval: 30000` on dashboard stats |
+| Admin settings page | [Settings page](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/app/(protected)/admin/settings/page.tsx) |
+
+### ❌ Not Yet Implemented
+| Sub-feature | Notes |
+|---|---|
+| Dashboard charts (visual insights) | Only stat cards, no chart library (e.g., Recharts) integrated |
+| Advanced search across reports | Basic filtering exists, no full-text search |
+| Export data functionality | No CSV/PDF export for reports or logs |
+| Super Admin vs Admin permission split in UI | Both share same dashboard; no Super Admin exclusive UI section |
+
+---
+
+## 8. Notifications & Alerts — 45% 🔴
+
+### ✅ Completed
+| Sub-feature | Evidence |
+|---|---|
+| Zone entry/exit detection (geofencing engine) | [zoneDetectionEngine.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/utils/zoneDetectionEngine.ts) — ENTER/EXIT/INSIDE events |
+| Smart geofencing toggle | SafetyActionBar — [toggleSmartGeofencing](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/hooks/redux/redux-slices/userSafetySlice.ts#130-133) action |
+| Safety alert email via Brevo (template-based) | [brevo.api.ts](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/services/api/brevo.api.ts) — sends email with zone name, location link |
+| Notify circle on danger toggle | `notify_on_denger` flag per emergency contact |
+| Safety logs API | [/api/admin/safety-logs](file:///c:/Users/suman/Desktop/prohorini_0.0.1/src/app/api/admin/safety-logs) — stores zone_alert, sos events |
+| In-app toast notifications | Sonner toasts throughout the app |
+| Unsafe zone visual alert (HUD) | NearestSafetyHUD shows red banner when inside threat zone |
+
+### ❌ Not Yet Implemented
+| Sub-feature | Notes |
+|---|---|
+| Real-time push notifications (FCM/Web Push) | No service worker or push notification setup |
+| Automated geofencing alert pipeline | Zone detection exists but not wired to trigger alerts automatically |
+| Alert circle members when sharing toggled | No notification sent when location sharing starts/stops |
+| Admin broadcast warnings | No mechanism for admins to send platform-wide alerts |
+| SOS notification to circle members | SOS flag updates DB but no email/push sent to contacts |
+| Notification inbox/center for users | No in-app notification feed or history |
+
+---
+
+## 🏗️ Architecture Overview
+
+```mermaid
+graph TB
+    subgraph Frontend
+        A[Next.js 16 App] --> B[Clerk Auth]
+        A --> C[React Leaflet Maps]
+        A --> D[Redux Toolkit State]
+        A --> E[React Query Data]
+    end
+    
+    subgraph Backend
+        F[Next.js API Routes]
+        G[Supabase Realtime]
+        H[Brevo Email API]
+    end
+    
+    subgraph Database
+        I[(Supabase PostgreSQL)]
+    end
+    
+    A --> F
+    A --> G
+    F --> I
+    F --> H
+    G --> I
+    
+    style A fill:#1e293b,color:#fff
+    style I fill:#3ecf8e,color:#fff
+    style B fill:#6c47ff,color:#fff
+```
+
+---
+
+## 🎯 Priority Recommendations
+
+> [!IMPORTANT]
+> ### Top 5 Items to Complete Next
+> 1. **SOS notification pipeline** — Wire SOS trigger to send emails/push to emergency contacts
+> 2. **Automated geofencing alerts** — Connect zone detection engine → alert dispatcher
+> 3. **Anonymous reporting** — Add toggle in crime report modal
+> 4. **Sharing auto-expiry timer** — Enforce the `expiresAt` with a countdown + auto-stop
+> 5. **Dashboard charts** — Add Recharts/Victory for visual insights on admin dashboard
+
+> [!WARNING]
+> ### Security & Production Readiness
+> - Rate-limiting is not implemented on crime report API
+> - No spam prevention on any endpoint
+> - Admin credentials are hardcoded in sign-in page comments — **remove before production**
+> - `console.log` statements throughout codebase need cleanup
+
+---
+
+## 📦 Tech Dependencies Status
+
+| Library | Version | Purpose | Status |
+|---|---|---|---|
+| `@clerk/nextjs` | ^6.38.1 | Authentication | ✅ Active |
+| `@supabase/supabase-js` | ^2.97.0 | Database + Realtime | ✅ Active |
+| `react-leaflet` | ^5.0.0 | Maps | ✅ Active |
+| `@turf/turf` | ^7.3.4 | Spatial calculations | ✅ Active |
+| `supercluster` | ^8.0.1 | Crime clustering | ✅ Active |
+| `leaflet.heat` | ^0.2.0 | Heatmap layer | ✅ Active |
+| `react-leaflet-draw` | ^0.21.0 | Map drawing tools | ✅ Active |
+| `zod` | ^4.3.6 | Validation | ✅ Active |
+| `@getbrevo/brevo` | ^4.0.1 | Email notifications | ✅ Active |
+| `@reduxjs/toolkit` | ^2.11.2 | State management | ✅ Active |
+| `@tanstack/react-query` | ^5.90.21 | Data fetching | ✅ Active |
