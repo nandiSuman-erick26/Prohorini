@@ -54,7 +54,7 @@ const UserMenu = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="w-56 mt-2 rounded-2xl border-zinc-200/50 bg-white/95 backdrop-blur-xl shadow-2xl p-2 z-[10000] animate-in fade-in zoom-in-95 duration-200"
+        className="w-56 mt-2 rounded-2xl border-zinc-200/50 bg-white/95 backdrop-blur-xl shadow-2xl p-2 z-[10010] animate-in fade-in zoom-in-95 duration-200"
       >
         <div className="px-2 py-2 mb-1">
           <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">
