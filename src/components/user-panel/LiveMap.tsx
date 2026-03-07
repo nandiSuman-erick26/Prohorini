@@ -847,7 +847,7 @@ const LiveMap = () => {
 
       {/* 🚨 SAFETY ALERT MODAL */}
       <Dialog open={alertOpen} onOpenChange={setAlertOpen}>
-        <DialogContent className="w-[92%] max-w-md bg-white/95 backdrop-blur-xl border-red-100 rounded-[32px] p-0 overflow-hidden shadow-2xl z-[10005]">
+        <DialogContent className="w-[92%] max-w-md bg-white/95 backdrop-blur-xl border-red-100 rounded-[32px] p-0 overflow-hidden shadow-2xl">
           <div className="bg-red-600 p-7 flex flex-col items-center text-center space-y-3">
             <DialogTitle className="sr-only">
               Safety Alert: High Risk Area Detected

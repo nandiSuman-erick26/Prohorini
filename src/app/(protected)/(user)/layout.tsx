@@ -22,7 +22,7 @@ const UserLayout = ({ children }: any) => {
     >
       <div className="h-screen w-screen overflow-hidden flex flex-col bg-slate-50">
         {/* Fixed Top Navbar Container */}
-        <div className="fixed top-0 left-0 right-0 z-[1100] flex justify-center pt-4 pointer-events-none">
+        <div className="fixed top-0 left-0 right-0 z-[5000] flex justify-center pt-4 pointer-events-none">
           <div className="pointer-events-auto">
             <UserNavbar />
           </div>
@@ -50,7 +50,7 @@ const UserLayout = ({ children }: any) => {
         </div>
 
         {/* Fixed Bottom Navbar Container */}
-        <div className="fixed bottom-8 left-0 right-0 z-[1000] flex justify-center pointer-events-none">
+        <div className="fixed bottom-8 left-0 right-0 z-[5000] flex justify-center pointer-events-none">
           <div className="pointer-events-auto">
             <BottomNav />
           </div>
