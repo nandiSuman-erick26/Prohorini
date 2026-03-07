@@ -6,28 +6,32 @@ import {
   ZoneEvent,
   ZoneState,
 } from "../typeScript/types/threats.types";
+import { Feature, Polygon, MultiPolygon } from "geojson";
 
 export const detectZoneEntry = (
   userLocation: UserLocation,
   threatZones: ThreatZone[],
-  previousZonesState: ZoneState
+  previousZonesState: ZoneState,
 ): {
   events: ZoneEvent[];
   updatedState: ZoneState;
 } => {
-  const currentPoint = point([
-    userLocation.lng,
-    userLocation.lat,
-  ]);
+  const currentPoint = point([userLocation.lng, userLocation.lat]);
 
   const events: ZoneEvent[] = [];
   const updatedState: ZoneState = { ...previousZonesState };
 
   threatZones.forEach((zone) => {
-    const isInside = booleanPointInPolygon(
-      currentPoint,
-      zone.geometry
-    );
+    // booleanPointInPolygon only supports Polygon and MultiPolygon.
+    // LineStrings (e.g., exit routes) are skipped for this check.
+    const geometry = zone.geometry.geometry;
+    const isInside =
+      geometry.type === "Polygon" || geometry.type === "MultiPolygon"
+        ? booleanPointInPolygon(
+            currentPoint,
+            zone.geometry as Feature<Polygon | MultiPolygon>,
+          )
+        : false;
 
     const wasInside = previousZonesState[zone.id] ?? false;
 
