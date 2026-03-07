@@ -117,7 +117,7 @@ const adminMapSlice = createSlice({
     },
 
     setInfraDraft: (state, action: PayloadAction<any>) => {
-      console.log("Redux updating infraDraftLocation");
+      // console.log("Redux updating infraDraftLocation");
 
       state.infraDraft = { ...state.infraDraft, ...action.payload };
       // state.infraModalOpen = true;

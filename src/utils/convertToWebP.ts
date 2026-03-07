@@ -55,9 +55,9 @@ export const convertToWebP = (
             type: "image/webp",
           });
 
-          console.log(
-            `[convertToWebP] ${file.name}: ${(file.size / 1024).toFixed(0)}KB → ${(webpFile.size / 1024).toFixed(0)}KB (${Math.round((1 - webpFile.size / file.size) * 100)}% smaller)`,
-          );
+          // console.log(
+          //   `[convertToWebP] ${file.name}: ${(file.size / 1024).toFixed(0)}KB → ${(webpFile.size / 1024).toFixed(0)}KB (${Math.round((1 - webpFile.size / file.size) * 100)}% smaller)`,
+          // );
 
           resolve(webpFile);
         },

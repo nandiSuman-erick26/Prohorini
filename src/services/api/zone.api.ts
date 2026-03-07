@@ -1,13 +1,13 @@
 import { API } from "@/lib/axios";
 
 export const getZones = async () => {
-  console.log("api calling")
+  // console.log("api calling")
   const { data } = await API.get("/admin/threat-zones");
   return data;
 };
 
 export const createZone = async (payload: any) => {
-  console.log("AXIOS SENDING", payload);
+  // console.log("AXIOS SENDING", payload);
   
   const { data } = await API.post("/admin/threat-zones", payload);
   return data;

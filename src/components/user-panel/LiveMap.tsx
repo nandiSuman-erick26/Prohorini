@@ -262,7 +262,7 @@ const LiveMap = () => {
 
     // Wait for threat zones to fully load
     if (!threatZones || threatZones.length === 0) {
-      console.log("[Geofence] Waiting for threat zones data...");
+      // console.log("[Geofence] Waiting for threat zones data...");
       return;
     }
 
@@ -270,16 +270,16 @@ const LiveMap = () => {
 
     // DEBUG: Only log if coordinates actually changed
     console.log(
-      `[Geofence] Checking ${currentCoords.lat}, ${currentCoords.lng}. Inside: ${insideZone?.name || "None"}`,
+      // `[Geofence] Checking ${currentCoords.lat}, ${currentCoords.lng}. Inside: ${insideZone?.name || "None"}`,
     );
 
     if (insideZone?.id) {
       // If we are already tracking this specific zone, no need to re-detect
       if (insideZone.id === lastZoneId) return;
 
-      console.log(
-        `[Geofence] Zone Change Detected: ${lastZoneId || "None"} -> ${insideZone.id}`,
-      );
+      // console.log(
+      //   `[Geofence] Zone Change Detected: ${lastZoneId || "None"} -> ${insideZone.id}`,
+      // );
       setLastZoneId(insideZone.id);
 
       // Only trigger safety modal if it's a threat zone AND we haven't shown it yet in this mount
@@ -287,9 +287,9 @@ const LiveMap = () => {
         insideZone.type === "threat_zone" &&
         !notifiedZonesRef.current.has(insideZone.id)
       ) {
-        console.log(
-          `[Geofence] 🚨 THREAT DETECTED in "${insideZone.name}". Launching Modal.`,
-        );
+        // console.log(
+        //   `[Geofence] 🚨 THREAT DETECTED in "${insideZone.name}". Launching Modal.`,
+        // );
         setDetectedZone(insideZone);
         setAlertOpen(true);
         notifiedZonesRef.current.add(insideZone.id);
@@ -297,7 +297,7 @@ const LiveMap = () => {
     } else {
       // Reset tracker when leaving all zones
       if (lastZoneId !== null) {
-        console.log("[Geofence] Left all zones. Resetting tracker.");
+        // console.log("[Geofence] Left all zones. Resetting tracker.");
         setLastZoneId(null);
         // Clear escape route when leaving all zones
         setShowEscapeButton(false);

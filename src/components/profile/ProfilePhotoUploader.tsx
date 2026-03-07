@@ -23,7 +23,7 @@ const ProfilePhotoUploader = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: userData } = useProfile();
-  console.log("userdata", userData);
+  // console.log("userdata", userData);
 
   const queryClient = useQueryClient();
 

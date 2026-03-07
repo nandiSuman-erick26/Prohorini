@@ -6,7 +6,7 @@ export const getApprovedReports = async () => {
     .select("*")
     .eq("status", "approved");
   if (error) {
-    console.log("Error fetching approved reports:", error);
+    // console.log("Error fetching approved reports:", error);
     return [];
   }
   return data;

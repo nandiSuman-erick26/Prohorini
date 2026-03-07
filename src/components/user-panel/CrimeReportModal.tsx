@@ -107,7 +107,7 @@ const CrimeReportModal = ({ isOpen, onClose }: Props) => {
   };
 
   const onSubmit = async (data: CrimeReportSchema) => {
-    console.log("🚀 Submitting Incident Report...", data);
+    // console.log("🚀 Submitting Incident Report...", data);
     const lastTime = localStorage.getItem("lastCrimeReport");
 
     if (lastTime && Date.now() - Number(lastTime) < 120000) {
@@ -136,12 +136,12 @@ const CrimeReportModal = ({ isOpen, onClose }: Props) => {
         }
       }
 
-      console.log(
-        "📸 Evidence to upload:",
-        photoToUpload
-          ? `${photoToUpload.name} (${(photoToUpload.size / 1024).toFixed(0)}KB)`
-          : "None",
-      );
+      // console.log(
+      //   "📸 Evidence to upload:",
+      //   photoToUpload
+      //     ? `${photoToUpload.name} (${(photoToUpload.size / 1024).toFixed(0)}KB)`
+      //     : "None",
+      // );
 
       await mutateAsync({
         userId: user?.id ?? null,
@@ -153,7 +153,7 @@ const CrimeReportModal = ({ isOpen, onClose }: Props) => {
         photo: photoToUpload,
       });
 
-      console.log("✅ Submission Successful!");
+      // console.log("✅ Submission Successful!");
       localStorage.setItem("lastCrimeReport", Date.now().toString());
       toast.success("Report submitted successfully");
       reset();

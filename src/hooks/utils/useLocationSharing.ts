@@ -18,14 +18,14 @@ export const useLocationSharing = (userId: string | null) => {
   const lastSentRef = useRef<number>(0);
 
   // Debug: log what userId we received
-  useEffect(() => {
-    console.log("[useLocationSharing] userId:", userId);
-    console.log(
-      "[useLocationSharing] sharingSession.active:",
-      sharingSession.active,
-    );
-    console.log("[useLocationSharing] safetyStatus:", safetyStatus);
-  }, [userId, sharingSession.active, safetyStatus]);
+  // useEffect(() => {
+  //   console.log("[useLocationSharing] userId:", userId);
+  //   console.log(
+  //     "[useLocationSharing] sharingSession.active:",
+  //     sharingSession.active,
+  //   );
+  //   console.log("[useLocationSharing] safetyStatus:", safetyStatus);
+  // }, [userId, sharingSession.active, safetyStatus]);
 
   useEffect(() => {
     // We always want to track position for the local map display,
@@ -64,11 +64,12 @@ export const useLocationSharing = (userId: string | null) => {
           now - lastSentRef.current >= interval &&
           (sharingSession.active || safetyStatus === "sos")
         ) {
-          console.log("[useLocationSharing] Upserting to DB...", {
-            user_id: userId,
-            latitude,
-            longitude,
-          });
+          // console.log("[useLocationSharing] Upserting to DB...", 
+          //   {
+          //   user_id: userId,
+          //   latitude,
+          //   longitude,
+          // });
 
           const { error } = await supabase.from("live_locations").upsert({
             user_id: userId,
@@ -82,9 +83,10 @@ export const useLocationSharing = (userId: string | null) => {
 
           if (error) {
             console.error("[useLocationSharing] Supabase upsert error:", error);
-          } else {
-            console.log("[useLocationSharing] Upsert SUCCESS");
           }
+          //  else {
+          //   console.log("[useLocationSharing] Upsert SUCCESS");
+          // }
 
           lastSentRef.current = now;
         }
@@ -120,13 +122,13 @@ export const useLocationSharing = (userId: string | null) => {
         return;
       }
 
-      console.log(
-        `[useLocationSharing] Auto-expiry set for ${timeLeft / 1000}s from now.`,
-      );
+      // console.log(
+      //   `[useLocationSharing] Auto-expiry set for ${timeLeft / 1000}s from now.`,
+      // );
       const timer = setTimeout(() => {
-        console.log(
-          "[useLocationSharing] SESSION EXPIRED. Stopping sharing...",
-        );
+        // console.log(
+        //   "[useLocationSharing] SESSION EXPIRED. Stopping sharing...",
+        // );
         dispatch(stopSharingSession());
       }, timeLeft);
 
@@ -145,7 +147,7 @@ export const useLocationSharing = (userId: string | null) => {
         if (!navigator.geolocation) return;
 
         navigator.geolocation.getCurrentPosition(async (pos) => {
-          console.log("[useLocationSharing] Sending FINAL OFF update to DB...");
+          // console.log("[useLocationSharing] Sending FINAL OFF update to DB...");
           await supabase.from("live_locations").upsert({
             user_id: userId,
             latitude: pos.coords.latitude,

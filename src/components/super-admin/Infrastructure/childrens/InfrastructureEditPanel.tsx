@@ -56,7 +56,7 @@ const InfrastructureEditPanel = () => {
   if (!selected) return null;
 
   const onSubmit: SubmitHandler<any> = (data: any) => {
-    console.log(data);
+    // console.log(data);
     
     updateMutation.mutate({
       id: selected.id,

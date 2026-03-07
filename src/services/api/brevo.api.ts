@@ -104,7 +104,7 @@ export const sendSafetyAlertEmail = async (data: SafetyAlertData) => {
       htmlContent: htmlContent,
     });
 
-    console.log("Safety alert custom email sent successfully:", response);
+    // console.log("Safety alert custom email sent successfully:", response);
     return { success: true, messageId: response.messageId };
   } catch (error) {
     console.error("Error sending safety alert email:", error);

@@ -107,8 +107,8 @@ const ThreatZoneMapDraw = ({
     editingZoneId,
   } = useAppSelector((state) => state.adminMap);
 
-  console.log("Edit mode active", isZoneEditMode);
-  console.log("Editing Zone", editingZoneId);
+  // console.log("Edit mode active", isZoneEditMode);
+  // console.log("Editing Zone", editingZoneId);
 
   const updateZoneMutation = useMutation({
     mutationFn: updateZone,
@@ -148,7 +148,7 @@ const ThreatZoneMapDraw = ({
     };
   }, [isZoneEditMode, editingZoneId, zones]);
 
-  console.log("ENABLE-ADD-INFRA", enableInfraAdd);
+  // console.log("ENABLE-ADD-INFRA", enableInfraAdd);
 
   return (
     <MapContainer

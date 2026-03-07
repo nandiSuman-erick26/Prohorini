@@ -82,8 +82,8 @@ const InfrastructureMap = () => {
   const {data: infra} = useQuery({queryKey: ["infra"], queryFn: getSafetyInfra});
   const filteredInfra = infra?.filter((i: any) => infraFilterType === "all" ? true : i.type === infraFilterType) ?? [];
 
-  console.log("infra Mode", infraMode);
-  console.log("infra draft", infraDraft);
+  // console.log("infra Mode", infraMode);
+  // console.log("infra draft", infraDraft);
   return (
     <MapContainer
     center={[22.57, 88.36]}
