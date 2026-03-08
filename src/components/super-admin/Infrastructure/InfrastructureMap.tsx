@@ -1,23 +1,23 @@
-"use client"
+"use client";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux/store/rootRedux";
+import { getSafetyInfra } from "@/services/api/safetyInfra.api";
+import { useQuery } from "@tanstack/react-query";
 import {
-  //  useAppDispatch, 
-   useAppSelector } from '@/hooks/redux/store/rootRedux'
-import { getSafetyInfra } from '@/services/api/safetyInfra.api'
-import { useQuery } from '@tanstack/react-query'
-import {MapContainer, TileLayer, Marker, useMap, 
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMap,
   // useMap, useMapEvent
-} from "react-leaflet"
+} from "react-leaflet";
 // import L from "leaflet"
-// import MapClickHandler from '@/services/helper/MapClickHandler'
-// import { InfraMarker } from '@/services/helper/InfraMarker'
-// import { getInfraIcon } from '../ThreatZoneMapDraw'
-import { EditableMarker } from '@/services/helper/EditableMarker'
+import MapClickHandler from "@/services/helper/MapClickHandler";
+import { setInfraDraft } from "@/hooks/redux/redux-slices/adminMapSlice";
+import { EditableMarker } from "@/services/helper/EditableMarker";
 import "leaflet/dist/leaflet.css";
 
 import L from "leaflet";
-import { useEffect } from 'react'
-import { InfraMarker } from '@/services/helper/InfraMarker'
-
+import { useEffect } from "react";
+import { InfraMarker } from "@/services/helper/InfraMarker";
 
 const TILE_MAPS = {
   dark: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
@@ -77,43 +77,57 @@ export const createInfraIcon = (type: string) => {
 // const CENTER = [22.57, 88.36]
 
 const InfrastructureMap = () => {
-  // const dispatch = useAppDispatch()
-  const {infraMode, selectedInfraId, infraDraft, infraFilterType, mapType} = useAppSelector((state) => state.adminMap);
-  const {data: infra} = useQuery({queryKey: ["infra"], queryFn: getSafetyInfra});
-  const filteredInfra = infra?.filter((i: any) => infraFilterType === "all" ? true : i.type === infraFilterType) ?? [];
+  const dispatch = useAppDispatch();
+  const { infraMode, selectedInfraId, infraDraft, infraFilterType, mapType } =
+    useAppSelector((state) => state.adminMap);
+  const { data: infra } = useQuery({
+    queryKey: ["infra"],
+    queryFn: getSafetyInfra,
+  });
+  const filteredInfra =
+    infra?.filter((i: any) =>
+      infraFilterType === "all" ? true : i.type === infraFilterType,
+    ) ?? [];
 
   // console.log("infra Mode", infraMode);
   // console.log("infra draft", infraDraft);
   return (
     <MapContainer
-    center={[22.57, 88.36]}
-    zoom={10}
-    zoomControl={false}
-    className='h-full w-full rounded-xl'
+      center={[22.57, 88.36]}
+      zoom={10}
+      zoomControl={false}
+      className="h-full w-full rounded-xl"
     >
-      
-      <DynamicTileLayer mapType={mapType}/>
+      <DynamicTileLayer mapType={mapType} />
+
+      {(infraMode === "add" || infraMode === "edit") && (
+        <MapClickHandler
+          onClick={(latlng) => dispatch(setInfraDraft(latlng))}
+        />
+      )}
 
       {/* {view mode} */}
 
-      {infraMode === "view" && filteredInfra?.map((i:any)=>(
-        <InfraMarker key={i.id} infra={i}/>
-      ))}
+      {infraMode === "view" &&
+        filteredInfra?.map((i: any) => <InfraMarker key={i.id} infra={i} />)}
 
       {/* {ADD MORE} */}
 
       {infraMode === "add" && infraDraft && (
-        <Marker position={[infraDraft.lat, infraDraft.lng]} icon={createInfraIcon("draft")}/>
+        <Marker
+          position={[infraDraft.lat, infraDraft.lng]}
+          icon={createInfraIcon("draft")}
+        />
       )}
 
       {/* {Edit More} */}
 
-      {infraMode === "edit" && filteredInfra?.filter((i:any) => i.id === selectedInfraId)?.map((i:any)=>(
-        <EditableMarker key={i.id} infra={i}/>
-      ))}
-    
+      {infraMode === "edit" &&
+        filteredInfra
+          ?.filter((i: any) => i.id === selectedInfraId)
+          ?.map((i: any) => <EditableMarker key={i.id} infra={i} />)}
     </MapContainer>
-  )
-}
+  );
+};
 
-export default InfrastructureMap
+export default InfrastructureMap;
