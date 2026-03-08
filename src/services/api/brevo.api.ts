@@ -13,6 +13,16 @@ interface SafetyAlertData {
 }
 
 export const sendSafetyAlertEmail = async (data: SafetyAlertData) => {
+  if (!data.receiverEmail) {
+    console.warn(`Skipping alert for ${data.receiverName}: no email address`);
+    return { success: false, skipped: true, reason: "no_email" };
+  }
+
+  if (!apiKey) {
+    console.error("BREVO_API_KEY is not set in environment variables");
+    throw new Error("Email service not configured: Missing BREVO_API_KEY");
+  }
+
   try {
     const htmlContent = `
       <!DOCTYPE html>
@@ -106,8 +116,13 @@ export const sendSafetyAlertEmail = async (data: SafetyAlertData) => {
 
     // console.log("Safety alert custom email sent successfully:", response);
     return { success: true, messageId: response.messageId };
-  } catch (error) {
-    console.error("Error sending safety alert email:", error);
-    throw new Error("Failed to dispatch safety alert");
+  } catch (error: any) {
+    console.error("Error sending safety alert email:", error?.message || error);
+    if (error?.body) {
+      console.error("Brevo API error body:", JSON.stringify(error.body));
+    }
+    throw new Error(
+      `Failed to dispatch safety alert: ${error?.message || "Unknown Brevo error"}`,
+    );
   }
 };

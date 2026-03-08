@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   }
 
   const body = await req.json();
-  const { name, phone, relationship } = body;
+  const { name, phone, relationship, email } = body;
 
   const { data: user_profile, error } = await supabaseAdmin
     .from("users_profile")
@@ -27,6 +27,8 @@ export async function POST(req: Request) {
       name,
       phone,
       relationship,
+      email,
+      notify_on_denger: true,
     });
 
   if (insertError) {

@@ -51,9 +51,21 @@ export async function POST(req: Request) {
       );
     }
 
-    // 3. Dispatch emails via Brevo for each member
-    const results = await Promise.all(
-      members.map((member) =>
+    // 4. Filter to only members that have an email address
+    const membersWithEmail = members.filter(
+      (m) => m.email && m.email.trim() !== "",
+    );
+
+    if (membersWithEmail.length === 0) {
+      return NextResponse.json(
+        { message: "No members with email to notify" },
+        { status: 200 },
+      );
+    }
+
+    // 5. Dispatch emails via Brevo for each member (allSettled so one failure doesn't block others)
+    const results = await Promise.allSettled(
+      membersWithEmail.map((member) =>
         sendSafetyAlertEmail({
           receiverEmail: member.email,
           receiverName: member.name,
@@ -65,7 +77,17 @@ export async function POST(req: Request) {
       ),
     );
 
-    return NextResponse.json({ success: true, count: results.length });
+    const succeeded = results.filter((r) => r.status === "fulfilled").length;
+    const failed = results.filter((r) => r.status === "rejected").length;
+
+    if (failed > 0) {
+      const errors = results
+        .filter((r): r is PromiseRejectedResult => r.status === "rejected")
+        .map((r) => r.reason?.message || "Unknown");
+      console.error("Some alerts failed:", errors);
+    }
+
+    return NextResponse.json({ success: true, sent: succeeded, failed });
   } catch (error: any) {
     console.error("Alert dispatch failed:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
