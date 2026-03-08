@@ -51,10 +51,8 @@ export default clerkMiddleware(async (auth, req) => {
   }
 
   // PAGE ROLE PROTECTION (Navigation)
-  if (role === "USER") {
-    if (isAdminRoute) {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
-    }
+  if (isAdminRoute && role !== "ADMIN" && role !== "SUPER_ADMIN") {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
   if (

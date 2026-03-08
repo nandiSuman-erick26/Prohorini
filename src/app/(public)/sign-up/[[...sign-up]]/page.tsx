@@ -41,8 +41,10 @@ export default function SignUpPage() {
                 formButtonPrimary:
                   "bg-white hover:bg-zinc-200 text-black font-black uppercase text-[10px] tracking-widest h-10 md:h-12 rounded-2xl transition-all shadow-xl shadow-white/5 border-none",
                 card: "bg-transparent shadow-none border-none",
-                headerTitle: "sr-only",
-                headerSubtitle: "sr-only",
+                headerTitle:
+                  "text-white font-black uppercase text-base tracking-widest",
+                headerSubtitle:
+                  "text-zinc-400 font-bold text-[10px] uppercase tracking-tight mt-1",
                 socialButtonsBlockButton:
                   "rounded-2xl border border-white/10 bg-white/5 text-white hover:bg-white/10 h-10 md:h-12",
                 socialButtonsBlockButtonText:
@@ -64,9 +66,17 @@ export default function SignUpPage() {
                 dividerLine: "bg-white/5",
                 dividerText:
                   "text-zinc-600 uppercase font-black text-[9px] tracking-widest",
+                formFieldSuccessText:
+                  "text-emerald-400 text-[10px] font-bold mt-1",
+                formFieldErrorText: "text-red-400 text-[10px] font-bold mt-1",
+                formFieldText: "text-zinc-400 text-[10px] font-medium mt-1",
+                formFieldHintText: "text-zinc-400 text-[10px] font-medium mt-1",
+                formFieldInputPlaceholder: "text-zinc-600",
+                alertText: "text-white text-[10px] font-bold",
+                headerDescription: "text-zinc-400 text-xs",
               },
             }}
-            afterSignUpUrl="/admin"
+            afterSignUpUrl="/dashboard"
           />
         </div>
       </div>
