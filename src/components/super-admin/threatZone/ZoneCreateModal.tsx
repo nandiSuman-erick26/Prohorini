@@ -60,7 +60,7 @@ const ZoneCreateModal = () => {
 
   return (
     <Dialog open={open} onOpenChange={() => dispatch(closeZoneModal())}>
-      <DialogContent className="z-[10000] max-w-md rounded-[28px] border-0 shadow-2xl p-0 overflow-hidden">
+      <DialogContent className="z-[100001] max-w-md rounded-[28px] border-0 shadow-2xl p-0 overflow-hidden">
         {/* Header */}
         <div className="bg-zinc-950 px-7 py-6">
           <DialogHeader>
