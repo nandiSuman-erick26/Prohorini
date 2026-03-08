@@ -60,7 +60,7 @@ const ZoneCreateModal = () => {
 
   return (
     <Dialog open={open} onOpenChange={() => dispatch(closeZoneModal())}>
-      <DialogContent className="z-[100001] max-w-md rounded-[28px] border-0 shadow-2xl p-0 overflow-hidden">
+      <DialogContent className="max-w-md rounded-[28px] border-0 shadow-2xl p-0 overflow-hidden">
         {/* Header */}
         <div className="bg-zinc-950 px-7 py-6">
           <DialogHeader>
@@ -102,7 +102,7 @@ const ZoneCreateModal = () => {
                 <SelectTrigger className="h-10 rounded-xl border-slate-200 bg-slate-50 text-xs font-bold">
                   <SelectValue placeholder="Zone Type" />
                 </SelectTrigger>
-                <SelectContent className="z-[10001]">
+                <SelectContent>
                   <SelectGroup>
                     <SelectItem value="threat_zone">🔴 Threat Zone</SelectItem>
                     <SelectItem value="safe_zone">🟢 Safe Zone</SelectItem>
@@ -125,7 +125,7 @@ const ZoneCreateModal = () => {
                 <SelectTrigger className="h-10 rounded-xl border-slate-200 bg-slate-50 text-xs font-bold">
                   <SelectValue placeholder="Select..." />
                 </SelectTrigger>
-                <SelectContent className="z-[10001]">
+                <SelectContent>
                   <SelectGroup>
                     <SelectItem value="1">✅ Safe / Clear</SelectItem>
                     <SelectItem value="2">🟡 Low</SelectItem>
