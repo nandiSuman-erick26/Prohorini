@@ -5,7 +5,7 @@ import { useClerk } from "@clerk/nextjs";
 import { useState } from "react";
 import ProhoriniShieldLoader from "@/components/ui/loaders/ProhoriniShieldLoader";
 import { usePathname, useRouter } from "next/navigation";
-import { Download, Bell } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useProfile } from "@/hooks/react-query/useProfile";
 
 const pageTitles: Record<string, { title: string; subtitle: string }> = {
@@ -38,7 +38,11 @@ const pageTitles: Record<string, { title: string; subtitle: string }> = {
   "/admin/settings": { title: "Settings", subtitle: "Platform configuration" },
 };
 
-const AdminTopbar = () => {
+interface AdminTopbarProps {
+  onMenuToggle: () => void;
+}
+
+const AdminTopbar = ({ onMenuToggle }: AdminTopbarProps) => {
   const router = useRouter();
   const { signOut } = useClerk();
   const pathname = usePathname();
@@ -61,36 +65,31 @@ const AdminTopbar = () => {
   };
 
   return (
-    <header className="h-16 bg-white border-b border-slate-100 flex items-center justify-between px-8 shrink-0">
-      {/* Page Title */}
-      <div className="flex items-center gap-4">
-        <div className="h-10 w-1.5 bg-red-500 rounded-full" />
-        <div className="flex flex-col">
-          <h1 className="text-xl font-black text-slate-900 uppercase tracking-tighter leading-none italic">
+    <header className="h-16 bg-white border-b border-slate-100 flex items-center justify-between px-4 sm:px-8 shrink-0">
+      {/* Left: Hamburger (mobile) + Page Title */}
+      <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+        {/* Hamburger — only on mobile */}
+        <button
+          onClick={onMenuToggle}
+          className="lg:hidden h-9 w-9 rounded-xl border border-slate-100 bg-slate-50 flex items-center justify-center hover:bg-slate-100 transition-colors shrink-0"
+          aria-label="Open sidebar"
+        >
+          <Menu className="h-4 w-4 text-slate-600" />
+        </button>
+
+        <div className="h-10 w-1.5 bg-red-500 rounded-full shrink-0" />
+        <div className="flex flex-col min-w-0">
+          <h1 className="text-lg sm:text-xl font-black text-slate-900 uppercase tracking-tighter leading-none italic truncate">
             {page.title}
           </h1>
-          <p className="text-[10px] font-black text-slate-400 mt-1 uppercase tracking-[0.2em] opacity-70">
+          <p className="text-[10px] font-black text-slate-400 mt-1 uppercase tracking-[0.2em] opacity-70 truncate hidden sm:block">
             {page.subtitle}
           </p>
         </div>
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-4">
-        {/* <button className="relative h-9 w-9 rounded-xl border border-slate-100 bg-slate-50 flex items-center justify-center hover:bg-slate-100 transition-colors">
-          <Bell className="h-4 w-4 text-slate-500" />
-          <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-white" />
-        </button>
-
-        <Button
-          variant="outline"
-          size="sm"
-          className="hidden md:flex h-9 px-4 rounded-xl border-slate-200 text-slate-600 font-bold text-[11px] uppercase tracking-wider hover:bg-slate-50"
-        >
-          <Download className="h-3.5 w-3.5 mr-2" />
-          Export
-        </Button> */}
-
+      <div className="flex items-center gap-3 sm:gap-4 shrink-0">
         <div className="h-6 w-px bg-slate-200 mx-1" />
 
         {/* User Profile Info */}
